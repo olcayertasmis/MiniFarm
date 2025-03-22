@@ -21,3 +21,5 @@ There are three different production buildings in the game:
 - Zenject
 
 ## Gameplay
+https://github.com/user-attachments/assets/51d2cf45-7344-4afc-9073-da0022a2ebcb
+
