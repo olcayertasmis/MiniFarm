@@ -54,6 +54,8 @@ namespace MiniFarm.Gameplay.Factories
             if (productionButtonPanel.activeSelf) SetButtonPanelActiveness(false);
 
             UpdateUI();
+
+            if (ProductionQueue.Count > 0 && !IsProducing) StartProduction().Forget();
         }
 
         #endregion
