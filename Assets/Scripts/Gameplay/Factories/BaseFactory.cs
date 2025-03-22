@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using MiniFarm.Core;
 using MiniFarm.Data.FactoryData;
-using MiniFarm.Gameplay.Resources;
+using MiniFarm.Interfaces;
+using MiniFarm.Managers;
 using MiniFarm.UI;
 using MiniFarm.Utilities;
 using UnityEngine;
@@ -27,12 +26,15 @@ namespace MiniFarm.Gameplay.Factories
         [Header("Data")]
         private int _currentMaxCapacity;
         private int _currentProductAmount;
-        protected float RemainingTime;
+        [HideInInspector] public float remainingTime;
 
         [Header("Controls")]
         protected bool IsProducing;
-        protected readonly Queue<int> ProductionQueue = new();
+        public readonly Queue<int> ProductionQueue = new();
         protected CancellationTokenSource CancellationTokenSource;
+
+        [Header("Strategy")]
+        [Inject] private IProductionStrategy _productionStrategy;
 
         #region Helpers
 
@@ -40,10 +42,10 @@ namespace MiniFarm.Gameplay.Factories
 
         #endregion
 
-        protected int CurrentProductAmount
+        public int CurrentProductAmount
         {
             get => _currentProductAmount;
-            private set
+            set
             {
                 if (value < 0) _currentProductAmount = 0;
                 else if (value > _currentMaxCapacity) _currentProductAmount = _currentMaxCapacity;
@@ -75,7 +77,7 @@ namespace MiniFarm.Gameplay.Factories
         protected virtual void Awake()
         {
             CurrentMaxCapacity = factoryData.GetDefaultCapacity;
-            RemainingTime = factoryData.GetProductionTime;
+            remainingTime = factoryData.GetProductionTime;
         }
 
         protected virtual void Start()
@@ -94,28 +96,24 @@ namespace MiniFarm.Gameplay.Factories
         {
             IsProducing = true;
 
-            while (RemainingTime > 0)
+            if (_productionStrategy != null)
             {
-                RemainingTime -= Time.deltaTime;
-                UpdateUI();
-                await UniTask.Yield();
+                await _productionStrategy.ProduceAsync(this);
             }
 
-            CurrentProductAmount++;
-            ProductionQueue.Dequeue();
             IsProducing = false;
             Debug.Log($"Current {factoryData.GetProductType} Amount: {CurrentProductAmount}");
 
             //SaveFactoryState();
             UpdateUI();
 
-            RemainingTime = factoryData.GetProductionTime;
+            remainingTime = factoryData.GetProductionTime;
         }
 
         public void StopProduction()
         {
             CancellationTokenSource?.Cancel();
-            RemainingTime = factoryData.GetProductionTime;
+            remainingTime = factoryData.GetProductionTime;
         }
 
         #endregion
@@ -135,7 +133,7 @@ namespace MiniFarm.Gameplay.Factories
 
         #region UI Methods
 
-        protected virtual void UpdateUI()
+        public virtual void UpdateUI()
         {
             uiSliderController.UpdateSlider(CurrentProductAmount, GetRemainingTime());
         }
@@ -144,7 +142,7 @@ namespace MiniFarm.Gameplay.Factories
         {
             if (ProductionQueue.Count <= 0) return factoryData.GetProductionTime;
 
-            return RemainingTime;
+            return remainingTime;
         }
 
         #endregion
@@ -157,7 +155,8 @@ namespace MiniFarm.Gameplay.Factories
                 factoryData.GetFactoryName,
                 CurrentProductAmount,
                 CurrentMaxCapacity,
-                RemainingTime
+                remainingTime,
+                new Queue<int>(ProductionQueue)
             );
         }
 
@@ -172,8 +171,15 @@ namespace MiniFarm.Gameplay.Factories
             if (myFactorySaveData != null)
             {
                 CurrentProductAmount = myFactorySaveData.currentProductAmount;
-                RemainingTime = myFactorySaveData.remainingTime;
+                remainingTime = myFactorySaveData.remainingTime;
                 CurrentMaxCapacity = myFactorySaveData.maxCapacity;
+                if (myFactorySaveData.productionQueue is { Count: > 0 })
+                {
+                    foreach (var item in myFactorySaveData.productionQueue)
+                    {
+                        ProductionQueue.Enqueue(item);
+                    }
+                }
             }
         }
 

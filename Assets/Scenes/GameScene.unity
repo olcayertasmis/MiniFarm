@@ -465,9 +465,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 411389820}
-  factoryLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!4 &363318327
 Transform:
   m_ObjectHideFlags: 0
@@ -1061,6 +1058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceText: {fileID: 199399561}
+  resourceType: 2
 --- !u!1 &634214558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,6 +1215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceText: {fileID: 584079822}
+  resourceType: 0
 --- !u!1 &817141915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1873,9 +1872,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84973cb8cf2a0ab4a8052075a80fc12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hayUI: {fileID: 735881739}
-  flourUI: {fileID: 1603134186}
-  breadUI: {fileID: 624350474}
+  resourceUIList:
+  - {fileID: 624350474}
+  - {fileID: 735881739}
+  - {fileID: 1603134186}
 --- !u!1 &1506584884
 GameObject:
   m_ObjectHideFlags: 0
@@ -2091,6 +2091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceText: {fileID: 1281767623}
+  resourceType: 1
 --- !u!1 &1680765685
 GameObject:
   m_ObjectHideFlags: 0

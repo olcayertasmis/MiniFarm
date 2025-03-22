@@ -89,7 +89,7 @@ namespace MiniFarm.Gameplay.Factories
             if (ProductionQueue.Count > 0)
             {
                 ProductionQueue.Dequeue();
-                if (ProductionQueue.Count <= 0) RemainingTime = factoryData.GetProductionTime;
+                if (ProductionQueue.Count <= 0) remainingTime = factoryData.GetProductionTime;
             }
         }
 
@@ -150,7 +150,7 @@ namespace MiniFarm.Gameplay.Factories
 
         #region UI Methods
 
-        protected override void UpdateUI()
+        public override void UpdateUI()
         {
             base.UpdateUI();
             _advancedUISliderController.UpdateProductionQueue(ProductionQueue.Count, CurrentMaxCapacity);

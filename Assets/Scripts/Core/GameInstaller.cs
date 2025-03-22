@@ -1,4 +1,5 @@
-using MiniFarm.Gameplay.Resources;
+using MiniFarm.Gameplay.Factories;
+using MiniFarm.Interfaces;
 using MiniFarm.Managers;
 using Zenject;
 
@@ -15,6 +16,8 @@ namespace MiniFarm.Core
             Container.Bind<GameManager>().FromComponentInHierarchy().AsSingle();
 
             Container.Bind<FactoryManager>().FromComponentInHierarchy().AsSingle();
+
+            Container.Bind<IProductionStrategy>().To<DefaultProductionStrategy>().WhenInjectedInto<BaseFactory>();
         }
     }
 }
