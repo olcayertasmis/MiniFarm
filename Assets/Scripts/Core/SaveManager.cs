@@ -18,7 +18,7 @@ namespace MiniFarm.Core
         private ResourceManager _resourceManager;
 
         [Header("Data")]
-        private Dictionary<string, FactorySaveData> _factorySaveData = new();
+        private readonly Dictionary<string, FactorySaveData> _factorySaveData = new();
 
         #endregion
 
@@ -40,6 +40,15 @@ namespace MiniFarm.Core
         {
             //_resourceManager.LoadResources();
             await UniTask.Delay(100);
+        }
+
+        public TimeSpan GetElapsedTimeSinceLastSave()
+        {
+            if (!PlayerPrefs.HasKey(Constants.LastSaveTimeKey)) return TimeSpan.Zero;
+
+            string lastSaveTimeString = PlayerPrefs.GetString(Constants.LastSaveTimeKey);
+            DateTime lastSaveTime = DateTime.Parse(lastSaveTimeString, null, System.Globalization.DateTimeStyles.RoundtripKind);
+            return DateTime.UtcNow - lastSaveTime;
         }
 
         #endregion
@@ -86,15 +95,7 @@ namespace MiniFarm.Core
                 return new List<FactorySaveData>();
             }
 
-            string lastSaveTimeString = PlayerPrefs.GetString("LastSaveTime", "");
-            DateTime lastSaveTime = DateTime.UtcNow;
-
-            if (!string.IsNullOrEmpty(lastSaveTimeString))
-            {
-                lastSaveTime = DateTime.Parse(lastSaveTimeString);
-            }
-
-            TimeSpan elapsedTime = DateTime.UtcNow - lastSaveTime;
+            var elapsedTime = GetElapsedTimeSinceLastSave();
 
             foreach (var factory in wrapper.factories)
             {

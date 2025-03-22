@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -83,6 +84,7 @@ namespace MiniFarm.Gameplay.Factories
         protected virtual void Start()
         {
             LoadFactoryState();
+            ProcessOfflineProduction();
             uiSliderController.SetSlider(factoryData.GetProductIcon, _currentProductAmount, GetRemainingTime(), factoryData.GetProductionTime, CurrentMaxCapacity);
         }
 
@@ -110,6 +112,16 @@ namespace MiniFarm.Gameplay.Factories
             remainingTime = factoryData.GetProductionTime;
         }
 
+        private void ProcessOfflineProduction()
+        {
+            TimeSpan elapsedTime = _saveManager.GetElapsedTimeSinceLastSave();
+            if (elapsedTime <= TimeSpan.Zero) return;
+
+            ProcessFactorySpecificOfflineProduction(elapsedTime);
+        }
+
+        protected abstract void ProcessFactorySpecificOfflineProduction(TimeSpan elapsedTime);
+
         public void StopProduction()
         {
             CancellationTokenSource?.Cancel();
@@ -126,6 +138,7 @@ namespace MiniFarm.Gameplay.Factories
 
             ResourceManager.UpdateResource(factoryData.GetProductType, CurrentProductAmount);
             CurrentProductAmount = 0;
+            if (!IsProducing) StartProduction().Forget();
             UpdateUI();
         }
 

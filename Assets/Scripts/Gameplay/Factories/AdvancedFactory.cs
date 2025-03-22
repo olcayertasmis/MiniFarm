@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MiniFarm.Data.FactoryData;
@@ -66,12 +67,28 @@ namespace MiniFarm.Gameplay.Factories
         {
             CancellationTokenSource = new CancellationTokenSource();
 
-            while (ProductionQueue.Count > 0)
+            while (ProductionQueue.Count > 0 && CurrentProductAmount < CurrentMaxCapacity)
             {
                 if (CancellationTokenSource.IsCancellationRequested) break;
 
                 await StartProductionBody();
             }
+        }
+
+        protected override void ProcessFactorySpecificOfflineProduction(TimeSpan elapsedTime)
+        {
+            var productionTime = factoryData.GetProductionTime;
+            var productionCount = (int)(elapsedTime.TotalSeconds / productionTime);
+
+            for (int i = 0; i < productionCount; i++)
+            {
+                if (CurrentProductAmount >= CurrentMaxCapacity) break;
+
+                CurrentProductAmount++;
+                if (ProductionQueue.Count > 0) ProductionQueue.Dequeue();
+            }
+
+            UpdateUI();
         }
 
         private bool AddProductionOrder()

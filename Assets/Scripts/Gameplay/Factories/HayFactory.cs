@@ -24,7 +24,7 @@ namespace MiniFarm.Gameplay.Factories
         {
             CancellationTokenSource = new CancellationTokenSource();
 
-            while (!CancellationTokenSource.IsCancellationRequested)
+            while (!CancellationTokenSource.IsCancellationRequested && CurrentProductAmount < CurrentMaxCapacity)
             {
                 if (CurrentProductAmount < CurrentMaxCapacity)
                 {
@@ -38,6 +38,21 @@ namespace MiniFarm.Gameplay.Factories
 
                 await UniTask.Yield();
             }
+        }
+
+        protected override void ProcessFactorySpecificOfflineProduction(TimeSpan elapsedTime)
+        {
+            var productionTime = factoryData.GetProductionTime;
+            var productionCount = (int)(elapsedTime.TotalSeconds / productionTime);
+
+            CurrentProductAmount += productionCount;
+            if (ProductionQueue.Count > 0) ProductionQueue.Dequeue();
+            if (CurrentProductAmount > CurrentMaxCapacity)
+            {
+                CurrentProductAmount = CurrentMaxCapacity;
+            }
+
+            UpdateUI();
         }
 
         #endregion
