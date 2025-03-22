@@ -1,3 +1,4 @@
+using MiniFarm.Data.EnumData;
 using TMPro;
 using UnityEngine;
 
@@ -8,12 +9,25 @@ namespace MiniFarm.UI
         #region Variables
 
         [SerializeField] private TextMeshProUGUI resourceText;
+        [SerializeField] private ResourceType resourceType;
 
         #endregion
 
         #region Public Methods
 
-        public void UpdateResourceUI(int amount)
+        public void HandleResourceUpdated(ResourceType updatedResourceType, int amount)
+        {
+            if (updatedResourceType == resourceType)
+            {
+                UpdateResourceUI(amount);
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void UpdateResourceUI(int amount)
         {
             resourceText.text = amount.ToString();
         }
