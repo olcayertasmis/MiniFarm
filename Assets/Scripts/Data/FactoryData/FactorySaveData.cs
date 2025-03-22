@@ -16,5 +16,6 @@ namespace MiniFarm.Data.FactoryData
         public int currentProductAmount;
         public int maxCapacity;
         public float remainingTime;
+        public List<int> productionQueue;
     }
 }

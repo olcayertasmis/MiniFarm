@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using MiniFarm.Data.FactoryData;
-using MiniFarm.Gameplay.Resources;
+using MiniFarm.Managers;
 using MiniFarm.Utilities;
 using UnityEngine;
 using Zenject;
@@ -46,7 +46,7 @@ namespace MiniFarm.Core
 
         #region Factory Save-Load Methods
 
-        public void SaveFactory(string factoryID, int productAmount, int maxCapacity, float remainingTime)
+        public void SaveFactory(string factoryID, int productAmount, int maxCapacity, float remainingTime, Queue<int> productionQueue)
         {
             if (!_factorySaveData.ContainsKey(factoryID))
             {
@@ -56,8 +56,9 @@ namespace MiniFarm.Core
             _factorySaveData[factoryID].currentProductAmount = productAmount;
             _factorySaveData[factoryID].maxCapacity = maxCapacity;
             _factorySaveData[factoryID].remainingTime = remainingTime;
+            _factorySaveData[factoryID].productionQueue = new List<int>(productionQueue);
 
-            Debug.Log($"Saving Factory: {factoryID} | Amount: {productAmount} | Max: {maxCapacity} | Time: {remainingTime}");
+            Debug.Log($"Saving Factory: {factoryID} | Amount: {productAmount} | Max: {maxCapacity} | Time: {remainingTime} | Queue: {string.Join(", ", productionQueue)}");
 
             FactorySaveDataWrapper wrapper = new FactorySaveDataWrapper { factories = new List<FactorySaveData>(_factorySaveData.Values) };
             string json = JsonUtility.ToJson(wrapper);
@@ -100,11 +101,11 @@ namespace MiniFarm.Core
                 Debug.Log($"Elapsed Time in seconds: {elapsedTime.TotalSeconds}, Updated Remaining Time: {factory.remainingTime}");
                 factory.remainingTime -= Mathf.Max(0, (float)elapsedTime.TotalSeconds);
 
-                if (factory.remainingTime <= 0)
+                /*if (factory.remainingTime <= 0)
                 {
                     factory.currentProductAmount += 1;
                     factory.remainingTime = 0;
-                }
+                }*/
             }
 
             return wrapper.factories;
