@@ -13,7 +13,7 @@ namespace MiniFarm.Managers
         [SerializeField] private List<FactorySpawnPoint> spawnPoints = new();
         [SerializeField] private List<GameObject> baseFactoryPrefabs = new();
 
-        private readonly List<GameObject> _spawnedFactories = new();
+        //private readonly List<GameObject> _spawnedFactories = new();
 
         [Inject] private DiContainer _container;
 
@@ -40,7 +40,7 @@ namespace MiniFarm.Managers
                     var spawnedFactory = _container.InstantiatePrefab(factoryPrefab, spawnPoints[i].transform.position, Quaternion.identity, spawnPoints[i].transform);
 
                     spawnPoints[i].AssignFactory(spawnedFactory);
-                    _spawnedFactories.Add(spawnedFactory);
+                    //_spawnedFactories.Add(spawnedFactory);
                 }
             }
         }
@@ -56,7 +56,7 @@ namespace MiniFarm.Managers
                 spawnPoint.ClearFactory();
             }
 
-            _spawnedFactories.Clear();
+            //_spawnedFactories.Clear();
             SpawnFactories();
         }
 
