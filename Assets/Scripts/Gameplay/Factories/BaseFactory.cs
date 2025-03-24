@@ -194,6 +194,11 @@ namespace MiniFarm.Gameplay.Factories
                     }
                 }
             }
+
+            if (remainingTime <= 0 && ProductionQueue.Count <= 0)
+            {
+                remainingTime = factoryData.GetProductionTime;
+            }
         }
 
         #endregion
