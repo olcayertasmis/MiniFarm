@@ -52,6 +52,11 @@ namespace MiniFarm.Managers
                     _resources[resourceType] = PlayerPrefs.GetInt(key);
                     OnResourceUpdated?.Invoke(resourceType, _resources[resourceType]);
                 }
+                else
+                {
+                    _resources[resourceType] = 0;
+                    OnResourceUpdated?.Invoke(resourceType, _resources[resourceType]);
+                }
             }
         }
 
