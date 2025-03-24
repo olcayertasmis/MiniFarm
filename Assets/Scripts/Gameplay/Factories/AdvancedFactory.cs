@@ -65,6 +65,8 @@ namespace MiniFarm.Gameplay.Factories
 
         protected override async UniTask StartProduction()
         {
+            if (IsProducing) return;
+
             CancellationTokenSource = new CancellationTokenSource();
 
             while (ProductionQueue.Count > 0 && CurrentProductAmount < CurrentMaxCapacity)
@@ -77,15 +79,22 @@ namespace MiniFarm.Gameplay.Factories
 
         protected override void ProcessFactorySpecificOfflineProduction(TimeSpan elapsedTime)
         {
+            if (ProductionQueue.Count == 0) return;
+
             var productionTime = factoryData.GetProductionTime;
             var productionCount = (int)(elapsedTime.TotalSeconds / productionTime);
+
 
             for (int i = 0; i < productionCount; i++)
             {
                 if (CurrentProductAmount >= CurrentMaxCapacity) break;
 
-                CurrentProductAmount++;
-                if (ProductionQueue.Count > 0) ProductionQueue.Dequeue();
+                if (ProductionQueue.Count > 0)
+                {
+                    CurrentProductAmount++;
+                    ProductionQueue.Dequeue();
+                }
+                else break;
             }
 
             UpdateUI();
