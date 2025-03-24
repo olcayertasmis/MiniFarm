@@ -71,7 +71,7 @@ namespace MiniFarm.Gameplay.Factories
             {
                 if (CancellationTokenSource.IsCancellationRequested) break;
 
-                await StartProductionBody();
+                if (!IsProducing) await StartProductionBody();
             }
         }
 
@@ -108,6 +108,7 @@ namespace MiniFarm.Gameplay.Factories
             if (ProductionQueue.Count > 0)
             {
                 ProductionQueue.Dequeue();
+                GiveBackRequiredResources();
                 if (ProductionQueue.Count <= 0) remainingTime = factoryData.GetProductionTime;
             }
         }
@@ -162,6 +163,14 @@ namespace MiniFarm.Gameplay.Factories
             foreach (var requiredResource in _advancedFactoryData.GetRequiredResourceData)
             {
                 ResourceManager.UpdateResource(requiredResource.GetRequiredResourceData.GetResourceType(), -requiredResource.RequiredAmount);
+            }
+        }
+
+        private void GiveBackRequiredResources()
+        {
+            foreach (var requiredResource in _advancedFactoryData.GetRequiredResourceData)
+            {
+                ResourceManager.UpdateResource(requiredResource.GetRequiredResourceData.GetResourceType(), requiredResource.RequiredAmount);
             }
         }
 
