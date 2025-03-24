@@ -54,19 +54,5 @@ namespace MiniFarm.Gameplay.Factories
         }
 
         #endregion
-
-        #region Click Handling
-
-        private void OnMouseDown()
-        {
-            OnFactoryClicked();
-        }
-
-        private void OnFactoryClicked()
-        {
-            CollectProduct();
-        }
-
-        #endregion
     }
 }
