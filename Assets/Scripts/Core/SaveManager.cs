@@ -16,6 +16,7 @@ namespace MiniFarm.Core
 
         [Header("References")]
         private ResourceManager _resourceManager;
+        private FactorySpawnManager _factorySpawnManager;
 
         [Header("Data")]
         private readonly Dictionary<string, FactorySaveData> _factorySaveData = new();
@@ -23,9 +24,10 @@ namespace MiniFarm.Core
         #endregion
 
         [Inject]
-        public void Construct(ResourceManager resourceManager)
+        public void Construct(ResourceManager resourceManager, FactorySpawnManager factorySpawnManager)
         {
             _resourceManager = resourceManager;
+            _factorySpawnManager = factorySpawnManager;
         }
 
         #region Public Methods
@@ -33,6 +35,12 @@ namespace MiniFarm.Core
         public async Task SaveGame()
         {
             _resourceManager.SaveResources();
+
+            foreach (var factory in _factorySpawnManager.GetSpawnedFactories())
+            {
+                factory.SaveFactoryState();
+            }
+
             await UniTask.Delay(100);
         }
 

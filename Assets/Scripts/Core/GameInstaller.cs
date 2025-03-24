@@ -17,6 +17,8 @@ namespace MiniFarm.Core
 
             Container.Bind<FactoryManager>().FromComponentInHierarchy().AsSingle();
 
+            Container.Bind<FactorySpawnManager>().FromComponentInHierarchy().AsSingle();
+
             Container.Bind<IProductionStrategy>().To<DefaultProductionStrategy>().WhenInjectedInto<BaseFactory>();
         }
     }

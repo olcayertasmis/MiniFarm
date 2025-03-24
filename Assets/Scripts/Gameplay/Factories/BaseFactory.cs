@@ -162,7 +162,7 @@ namespace MiniFarm.Gameplay.Factories
 
         #region Save-Load Methods
 
-        private void SaveFactoryState()
+        public void SaveFactoryState()
         {
             _saveManager.SaveFactory(
                 factoryData.GetFactoryName,
@@ -197,11 +197,5 @@ namespace MiniFarm.Gameplay.Factories
         }
 
         #endregion
-
-        private void OnApplicationQuit()
-        {
-            Debug.Log("Application is quitting, saving factories...");
-            SaveFactoryState();
-        }
     }
 }
