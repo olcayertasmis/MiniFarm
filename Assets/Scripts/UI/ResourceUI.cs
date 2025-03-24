@@ -13,6 +13,12 @@ namespace MiniFarm.UI
 
         #endregion
 
+        #region Helpers
+
+        public ResourceType GetResourceType() => resourceType;
+
+        #endregion
+
         #region Public Methods
 
         public void HandleResourceUpdated(ResourceType updatedResourceType, int amount)

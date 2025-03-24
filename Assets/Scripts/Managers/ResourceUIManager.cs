@@ -11,9 +11,6 @@ namespace MiniFarm.Managers
 
         [Header("Resources UI")]
         [SerializeField] private List<ResourceUI> resourceUIList = new();
-        /*[SerializeField] private ResourceUI hayUI;
-        [SerializeField] private ResourceUI flourUI;
-        [SerializeField] private ResourceUI breadUI;*/
 
         [Header("References")]
         private ResourceManager _resourceManager;
@@ -30,7 +27,10 @@ namespace MiniFarm.Managers
 
         private void Start()
         {
-            _resourceManager.LoadResources();
+            foreach (var resourceUI in resourceUIList)
+            {
+                _resourceManager.UpdateResource(resourceUI.GetResourceType(), 0);
+            }
         }
 
         private void OnEnable()
@@ -39,9 +39,6 @@ namespace MiniFarm.Managers
             {
                 _resourceManager.OnResourceUpdated += resourceUI.HandleResourceUpdated;
             }
-            /*_resourceManager.OnResourceUpdated += hayUI.HandleResourceUpdated;
-            _resourceManager.OnFlourResourceUpdated += flourUI.HandleResourceUpdated;
-            _resourceManager.OnBreadResourceUpdated += breadUI.HandleResourceUpdated;*/
         }
 
         private void OnDisable()
@@ -50,9 +47,6 @@ namespace MiniFarm.Managers
             {
                 _resourceManager.OnResourceUpdated -= resourceUI.HandleResourceUpdated;
             }
-            /*_resourceManager.OnHayResourceUpdated -= hayUI.UpdateResourceUI;
-            _resourceManager.OnFlourResourceUpdated -= flourUI.UpdateResourceUI;
-            _resourceManager.OnBreadResourceUpdated -= breadUI.UpdateResourceUI;*/
         }
 
         #endregion

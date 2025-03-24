@@ -46,7 +46,7 @@ namespace MiniFarm.Core
 
         public async Task LoadGame()
         {
-            //_resourceManager.LoadResources();
+            _resourceManager.LoadResources();
             await UniTask.Delay(100);
         }
 
