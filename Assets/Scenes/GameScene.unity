@@ -1689,10 +1689,10 @@ MonoBehaviour:
   - {fileID: 1506584885}
   - {fileID: 1585436296}
   baseFactoryPrefabs:
-  - {fileID: 1379874141477045164, guid: 5d2800f280c91d343b9e34d2bf06cc45, type: 3}
-  - {fileID: 2307469500801607458, guid: 8080cd92909070a4ea459d12a5978be3, type: 3}
-  - {fileID: 1370466711172552332, guid: 17c3fee3064b5ce429c50c6b3455e5e7, type: 3}
-  - {fileID: 2397101527944993294, guid: 7c49e9ed2fe70a040b451507b90e387d, type: 3}
+  - {fileID: 3049965251222689204, guid: f971cbe3e8ad0a84f9a36ff91795ad1b, type: 3}
+  - {fileID: 8956937749064328597, guid: 24aab65ef7a0a8a4094ea6d3a34a3c49, type: 3}
+  - {fileID: 4589979875259953994, guid: 1a92709e8aff2f948b0967df89c70828, type: 3}
+  - {fileID: 2475044669857296429, guid: 41d9841bd68293945ae05fc96b205f47, type: 3}
 --- !u!1 &1281767621
 GameObject:
   m_ObjectHideFlags: 0
